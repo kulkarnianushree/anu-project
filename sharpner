@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1 style="background-color:orange; text-align: center; font-family: Verdana, Geneva, Tahoma, sans-serif;">Expense Tracker App</h1>
+        <label for="ExpenseDetails" style="font-size: larger; font-family: 'Times New Roman', Times, serif;">Expense Details:</label>
+        <form id="ExpenseDetails" onsubmit="handleFormSubmit(event)"> <br>
+            <label for="amount">Expense Amount:</label>
+            <input type="tel" id="amount"> 
+            <label for="details">Expense Details:</label>
+            <input type="text" id="details"> 
+            <label for="category">Expense Category:</label>
+            <select name="ExpenseCategory" id="category">
+                <option value="selectOne">default</option>
+                <option value="movie">Movie</option>
+                <option value="fuel">Fuel</option>
+                <option value="rent">House Rent</option>
+                <option value="grocery">Grocery</option>
+            </select> <br> <br>
+            <label for="submitbutton">
+                <button type="submit" id="submitbutton">Add</button>
+            </label>
+        </form>
+        <ul id="expenseList"></ul>
+        <script>
+            // Function to handle form submission
+            function handleFormSubmit(event) {
+                event.preventDefault();
+                const ExpenseDetails = {
+                    "ExpenseAmount": event.target.amount.value,
+                    "ExpenseDetails": event.target.details.value,
+                    "ExpenseCategory": event.target.category.value
+                };
+                let ExpenseDetails_serial = JSON.stringify(ExpenseDetails);
+                localStorage.setItem("ExpenseDetails", ExpenseDetails_serial);
+                const string = ExpenseDetails.ExpenseAmount + " - " + ExpenseDetails.ExpenseDetails + " - " + ExpenseDetails.ExpenseCategory;
+                const li = document.createElement("li");
+                const litext = document.createTextNode(string);
+                li.appendChild(litext);
+                const deleteButton = document.createElement("button");
+                deleteButton.innerHTML = "Delete";
+                deleteButton.onclick = function() {
+                    li.remove();
+                };
+                li.appendChild(deleteButton);
+                const editButton = document.createElement("button");
+                editButton.innerHTML = "Edit";
+                editButton.onclick = function() {
+                    const newAmount = prompt("Enter new amount:", ExpenseDetails.ExpenseAmount);
+                    const newDetails = prompt("Enter new details:", ExpenseDetails.ExpenseDetails);
+                    const newCategory = prompt("Enter new category:", ExpenseDetails.ExpenseCategory);
+                    const newString = newAmount + " - " + newDetails + " - " + newCategory;
+                    litext.nodeValue = newString;
+                    ExpenseDetails.ExpenseAmount = newAmount;
+                    ExpenseDetails.ExpenseDetails = newDetails;
+                    ExpenseDetails.ExpenseCategory = newCategory;
+                    ExpenseDetails_serial = JSON.stringify(ExpenseDetails);
+                    localStorage.setItem("ExpenseDetails", ExpenseDetails_serial);
+                };
+                li.appendChild(editButton);
+                const list = document.getElementById("expenseList");
+                list.appendChild(li);
+            }
+        </script> 
+    </body>
+</html>
